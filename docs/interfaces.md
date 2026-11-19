@@ -37,12 +37,12 @@ COSMOS のマネージャー ◀──② 命令とエラー（非公開）─�
 
 | 境界 | 流れるもの | 書く側 → 読む側（台帳の id） | 仕様（nro45-interfaces） | 公開 | 状態 |
 |---|---|---|---|---|---|
-| ① 観測指示書 | 観測指示書のファイル | `tool-obs-script` → `sw-cosmos` | `observation-script/`（準備中） | 公開（仮説） | 断片あり |
+| ① 観測指示書 | 観測指示書のファイル | `tool-obs-script` → `sw-cosmos` | `observation-script/` v1（案） | 公開（書き方） | 案あり。nobs のソースの解析を待つ |
 | ② マネージャーと Local Controller | 命令、エラー、装置の状態 | `sw-cosmos` ↔ `sw-cosmos-lc` | 置かない | 非公開 | 所在が記録にない |
-| ③ 観測時系列データ | 装置ごとの時系列のファイル（いまの呼び名は「ロギング」） | `sw-cosmos-lc`、`sw-sam45compat-lc`（YKSP）→ quick look（`sw-obs-ui`）、`sw-cosmos-merge` | `timeseries/`（準備中） | 公開できるかは確認中 | 断片あり（SAM45 だけ） |
-| ④ 観測生データ | 観測ごとに1つのファイル | `sw-cosmos-merge` → `db-nrodb-nobeyama`、`db-yksp-delivery`、解析ソフト | `raw-data/`（準備中） | 公開（仮説） | 記録がない |
+| ③ 観測時系列データ | 装置ごとの時系列のファイル（いまの呼び名は「ロギング」） | `sw-cosmos-lc`、`sw-sam45compat-lc`（YKSP）→ quick look（`sw-obs-ui`）、`sw-cosmos-merge` | `timeseries/`（準備中） | 公開 | 断片あり（SAM45 だけ）。形式は COSMOS のヘッダにある |
+| ④ 観測生データ | 観測ごとに1つのファイル | `sw-cosmos-merge` → `db-nrodb-nobeyama`、`db-yksp-delivery`、解析ソフト | `raw-data/`（準備中） | 公開 | 文書はない。形式はマージのソースにある |
 | ⑤ 保管と配信 | 保管の単位と、観測者が取得するときの形 | `db-nrodb-nobeyama`、`db-nrodb-mitaka`、`db-radio-archive`、`db-yksp-delivery`（暫定）→ 観測者 | `delivery/`（準備中）。規則は nro-data の [docs/data-path.md](https://github.com/nobeyama-radio-observatory/nro-data/blob/main/docs/data-path.md) | 形式と規則は公開。取得の方法は非公開 | 断片あり（暫定の YKSP だけ） |
-| ⑥ 解析 | 解析ソフトが読む形式 | 観測生データ → `tool-newstar`、`tool-nostar`、`tool-cont`、`tool-casa-export` | ④ と同じ | 公開 | 記録がない |
+| ⑥ 解析 | 解析ソフトが読む形式 | 観測生データ → `tool-newstar`、`tool-nostar`、`tool-cont`、`tool-casa-export` | ④ と同じ | 公開 | いまの解析ソフトは 4096 点が上限。CASA に移る |
 
 ## 境界ごとの詳細
 
@@ -54,6 +54,9 @@ COSMOS のマネージャー ◀──② 命令とエラー（非公開）─�
 - **出典：**
   - observation-flow.md の「1. 観測指示書」
   - tz230-firstlight の [docs/lessons.md](https://github.com/ars096/tz230-firstlight/blob/main/docs/lessons.md) の「2. nobs が出す指示書」
+- **仕様の情報源：** パラメータの文書はなく、命令の文書は古い。確実な情報源は nobs とマネージャーのソースなので、指示書の書き方は nobs のソースを AI が解析して要約する。ソースは公開しない（[聞き取り 2026-11-19](../interviews/2026-11-19.md) 問1。nro-user-tools の聞き取り 2026-11-19 問1〜問3）。
+- **マネージャーは検査せずに実行する。** 構文の誤りや装置の仕様の外の指示があると、その箇所で止まる。nobs の出力は誤りが出ないようテストされている。手を加えた指示書や手作業の指示書では誤りが起きうる（nro-user-tools の聞き取り 2026-11-19 問5）。
+- **新しい装置が入っても、形式は変わらない。** 装置ごとの Local Controller が受け付ける指示の項目が加わるだけ（同 問6）。YATSUGATAKE の Local Controller が組み込まれると `SET YKSP …` などが加わる（[聞き取り 2026-11-19](../interviews/2026-11-19.md) 問4）。
 - **作成ソフトを替えても、形式は変えない予定である。** nobs は近いうちに大幅に改修し、別のソフトに置き換える予定とされている（observation-flow.md の1）。この境界が、作り直しのときの契約になる。
 - **断片：**
   - tz230-firstlight の [docs/fields.md](https://github.com/ars096/tz230-firstlight/blob/main/docs/fields.md)：周波数まわりの欄と、欄どうしの関係。H40 のサンプル1件から読み取り、検算したもの
@@ -71,7 +74,8 @@ COSMOS のマネージャー ◀──② 命令とエラー（非公開）─�
 
 - **流れるもの：** マネージャーは、指示書の装置ごとの命令を、各装置の Local Controller に送る。Local Controller は共通の規格で作られており、エラーをマネージャーに返す。マネージャーは観測中も Local Controller の状態を受け取り、装置の異常を検出する（observation-flow.md の2、3）。
 - **公開：** 非公開。通信の方式と中身は書かない。
-- **非公開の文書の所在：** 記録がない。ハブの[非公開の一覧](https://github.com/nobeyama-radio-observatory/nro-context/blob/main/policy/non-public.md)の「所員向けの制御の手順書と構成の資料」も（要確認）のまま。文書名、版、ページで引用できる文書があるかを、計算機グループに確かめる。
+- **非公開の文書の所在：** 確認中（[聞き取り 2026-11-19](../interviews/2026-11-19.md) 問2）。Local Controller の内部の実装と、Local Controller との接続の方法は非公開とする（同 問1）。
+- **Local Controller の保守：** 装置ごとにあり、装置ごとに担当が変わりうる。いまは外部に発注している（同 問3）。
 - **関係する予定：**
   - YATSUGATAKE の最終版の連携ソフトウェア（YKSP-LC）は、マネージャーにつながる予定である（[聞き取り 2026-11-18](../interviews/2026-11-18.md) 問6）。
   - アンテナ制御ユニット（ACU）のインターフェースが変われば、COSMOS の改修も要る（同 問6）。ACU との境界は nro-45m-antenna の `nro45m-acu` が持つ。
@@ -90,19 +94,19 @@ COSMOS のマネージャー ◀──② 命令とエラー（非公開）─�
   - YATSUGATAKE で SAM45 の故障した Array を肩代わりするデータ（YKSP）は、SAM45 と同じ形式で書かれる（YATSUGATAKE-NRO45-sam45compat の README）。
   - 野辺山の NRODB は、2015年度から SAM45 のロギングのデータも保管している（nro-data の台帳の `db-nrodb-nobeyama`）。観測時系列データも保管の対象になる。
 - **断片：** sam45-logging.md は SAM45 の形式を要約している。COSMOS のヘッダファイルと実際のデータ1件を突き合わせて読んだもの。
-- **公開：** 確認中。COSMOS のソースから読み取った形式を公開してよいかは、契約の確認が要る（0013）。確認が済むまで、nro45-interfaces には書かない。
+- **公開：** 公開する。COSMOS のソースを解析して形式の要約を公開することは問題ない（[聞き取り 2026-11-19](../interviews/2026-11-19.md) 問5）。SAM45 のほかの装置の形式も、COSMOS のヘッダファイルに定められている（同 問6）。
+- **YKSP：** いまは SAM45 と完全に同じ形式。SAM45 互換のモードでない YKSP を動かすと、形式が変わる予定（同 問8）。そのときは `timeseries/` の新しい版になる。
 - **欠けていること：**
-  - アンテナなど、SAM45 のほかの装置の形式（記録がない）
-  - YKSP が SAM45 と完全に同じ形式か、違う部分があるか
-  - 公開してよいかの確認
+  - COSMOS のヘッダファイルの解析（ソースを手元に置いてから）
 
 ### ④ 観測生データ
 
 - **流れるもの：** 観測の終了時にマネージャーがマージを起動する。マージは各装置の観測時系列データを読み、観測ごとに1つの観測生データを作る。観測者は通常、この観測生データを取得して解析する。マージのスクリプトには、観測者はアクセスできない（observation-flow.md の6）。
+- **マージと解析ソフトの関係：** 観測生データは解析ソフトと整合させている。解析ソフトが CASA に移るときに、マージも変える必要がある。新しいマージは担当者をつけて内製にする予定（[聞き取り 2026-11-19](../interviews/2026-11-19.md) 問3）。
 - **YKSP：** SAM45 とは別の観測生データとして作る。観測者から見ると、観測生データが SAM45 と YKSP の二つになる（YATSUGATAKE-NRO45-sam45compat の README）。
 - **欠けていること：**
-  - 観測生データの形式の記述（記録がない。断片も見つかっていない）
-  - 形式の版を示す欄があるか（記録がない）
+  - 観測生データの形式の解析（文書はなく、マージのソースに定められている。[聞き取り 2026-11-19](../interviews/2026-11-19.md) 問7）
+  - 形式の版を示す欄は、なかったと思う（同 問7 の見立て）
   - マージの保守の担い手の数（台帳の `sw-cosmos-merge` は未記入）
 
 ### ⑤ 保管と配信
@@ -132,8 +136,7 @@ COSMOS のマネージャー ◀──② 命令とエラー（非公開）─�
   - 解析の主力は今後 CASA に移る。CASA の形式への書き出しは、アーカイブと連携している。
   - 出典：nro-user-tools の台帳
 - **欠けていること：**
-  - 各解析ソフトが、どの版の観測生データを読めるか（記録がない）
-  - YKSP の観測生データを、いまの解析ソフトがそのまま読めるか（記録がない）
+  - いまの解析ソフトには、データ点数 4096 点の上限がある。YKSP の SAM45 互換のモードは読めるが、フルモードは読めない。CASA は読めるので、CASA に移る必要がある（nro-data の聞き取り 2026-11-19 問6）
   - NEWSTAR、NOSTAR、cont は担い手が 0 で、維持していない（nro-user-tools の台帳）。形式が変わったときの対応の担い手がいない。
 
 ## この一覧の範囲の外
@@ -145,13 +148,12 @@ COSMOS のマネージャー ◀──② 命令とエラー（非公開）─�
 - 標準時計と分光計の時刻。PSW の観測は 1PPS の秒の境界から始まる（observation-flow.md の7。nro-time-standard）
 - リモート観測と、観測の操作のユーザーインターフェース（`sw-remote-obs`、`sw-obs-ui`）
 
-## 聞き取りの候補
+## 聞き取りの結果と残り
 
-計算機グループに、一度にまとめて聞きます。
+2026-11-19 に計算機マネージャーに聞いた（[聞き取り 2026-11-19](../interviews/2026-11-19.md)。nro-user-tools、nro-data、nro-45m-spectrometer にも同じ日の記録がある）。残っているのは次のとおり。
 
-1. ② のマネージャーと Local Controller の通信を、文書名、版、ページで引用できる非公開の文書があるか
-2. ③ の形式（COSMOS のヘッダから読み取ったもの）を公開してよいか。メーカーとの契約に制約があるか
-3. ④ の観測生データの形式の記述があるか。形式の版を示す欄があるか
-4. ① の命令の一覧と、パラメータの型、単位、範囲の記述があるか。nobs のソースの所在と言語
-5. ⑤ の YKSP の保管と配信の方針（アーカイブ、二重化、保管期間、リモートからの取得、データ量）
-6. 各装置の Local Controller（いまは `sw-cosmos-lc` にまとめている）を、装置ごとに分けて書くか。マージと Local Controller の保守の担い手の数
+1. マネージャーと Local Controller の通信を書いた非公開の文書があるか（確認中）
+2. 指示書に形式の版を示す欄があるか（確認中。マネージャーは判別していないという見立て）
+3. 装置ごとの Local Controller の担当と保守の状況（台帳の `sw-cosmos-lc` を装置ごとに分けるため）
+
+形式そのもの（①③④）は、nobs と COSMOS のソースを解析して書く。

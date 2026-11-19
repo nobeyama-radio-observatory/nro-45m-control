@@ -57,16 +57,19 @@
   depends_on: [sw-cosmos]
   status: 運用中
   maintenance: {by: 所内, condition: 成熟しており、トラブルはほとんどない。観測の支援として利用者を補助することがあり、利用者が独習できるマニュアルの整備が課題, effort: 小}
-  renewal: web UI 化を、計算機の更新と合わせて来年度か再来年度（2027〜2028年度）に行う予定
+  renewal: >-
+    web UI 化を、計算機の更新と合わせて来年度か再来年度（2027〜2028年度）に行う予定。まずは画面だけを更新し、マネージャーの中核はそのまま使って、呼び出しを既存の GUI から web UI に切り替える（聞き取り2026-11-19 問10）。
+    予算はまだ確保していない。内製に切り替える予定（聞き取り2026-11-19 問9）
   owner_role: 計算機グループ
-  maintainers: 未記入
+  maintainers: 2
   docs:
     - 観測者向け：遠隔観測のビューア（4つのビューアと画面） https://www.nro.nao.ac.jp/projects/45m/observations/windows/
     - 利用者が独習できるマニュアルはない（maintenance.condition）（2026-11-19 に確認）
   sources:
     - 構成：40周年記念誌 p.56（マネージャー画面の図の説明）
     - 保守の手間と状況：聞き取り2026-11-18 問7
-    - 更新の見込み：聞き取り2026-11-18 問5
+    - 更新の見込み：聞き取り2026-11-18 問5、聞き取り2026-11-19 問9、問10
+    - 担い手の数：聞き取り2026-11-19 問11
     - 担当：聞き取り2026-11-18 問1
   note: 2018年度の計算機の更新で、COSMOS の観測画面をすべて仮想計算機に移した（40周年記念誌 p.58）
 
@@ -80,9 +83,9 @@
     2011年度に検討を始めた。三鷹からの観測（Ver.0）を2012年度に試験運用し、2013年度から本運用。
     大学などからの観測（Ver.1）を2017年度から、音声も届ける方式（Ver.2）を2018年度から運用。2019年度から共同利用の観測はリモートが主体
   maintenance: {by: 所内, condition: 成熟しており、トラブルはほとんどない。ただし、画面を転送する方式のため、国外から観測すると画面の動きが遅く、使い勝手が悪い, effort: 小}
-  renewal: 画面を転送する方式をやめ、web UI での観測に切り替えたい。アクセスの方式も見直す。計算機の更新と合わせて来年度か再来年度（2027〜2028年度）に行う予定
+  renewal: 画面を転送する方式をやめ、web UI での観測に切り替えたい。アクセスの方式も見直す。計算機の更新と合わせて来年度か再来年度（2027〜2028年度）に行う予定。予算と範囲は sw-obs-ui の renewal
   owner_role: 計算機グループ
-  maintainers: 未記入
+  maintainers: 2
   docs:
     - 観測者向け：観測準備（観測の場所の選び方、事前の申し込み、接続試験） https://www.nro.nao.ac.jp/projects/45m/observations/
     - 観測者向け：遠隔観測のビューア https://www.nro.nao.ac.jp/projects/45m/observations/windows/
@@ -91,6 +94,7 @@
     - 導入：40周年記念誌 p.58
     - 保守の手間と状況：聞き取り2026-11-18 問5、問7、問8
     - 更新の見込みとその理由：聞き取り2026-11-18 問5、問8
+    - 担い手の数：聞き取り2026-11-19 問11
     - 担当：聞き取り2026-11-18 問1
     - リモートが主体になったこと：ハブの history/README.md（2019年度、技術シンポ2019）
   note: >-
@@ -119,8 +123,8 @@
   part_of: sw-cosmos
   depends_on: [ctl-computers]
   status: 運用中
-  maintenance: {by: 所内、メーカー, condition: 未記入, effort: 未記入}
-  renewal: 未記入。2027〜2028年度の計算機の更新の範囲に含まれるかは未記入。YATSUGATAKE の最終版の連携ソフトウェア（YKSP-LC）が、新しい Local Controller として COSMOS のマネージャーにつながる予定（聞き取り2026-11-18 問6）
+  maintenance: {by: メーカー, condition: 未記入, effort: 未記入}
+  renewal: 2027〜2028年度の計算機の更新は、まず画面だけで、Local Controller は含まない（聞き取り2026-11-19 問10）。正式に組み込まれると、指示書に SET YKSP などが加わる（聞き取り2026-11-19 問4）。YATSUGATAKE の最終版の連携ソフトウェア（YKSP-LC）が、新しい Local Controller として COSMOS のマネージャーにつながる予定（聞き取り2026-11-18 問6）
   owner_role: 計算機グループ
   maintainers: 未記入
   repos:
@@ -128,10 +132,10 @@
   sources:
     - 役割（マネージャーから装置ごとの命令を受けて装置を制御し、エラーを返し、観測時系列データ（ロギング）を書く）：YATSUGATAKE-NRO45-sam45compat の docs/cosmos/observation-flow.md の2、3、4
     - 指示書に現れる装置名（ANT、RXT、IFATT、SYNTHE、SAM45、MRG、MMC）：nro45-interfaces の observation-script/v1.md
-    - 保守の担い手の種類：sw-cosmos と同じと仮定（仮説）
+    - 保守の担い手の種類（外部に発注）、装置ごとにあり担当が変わりうること：聞き取り2026-11-19 問3
   note: >-
     アンテナ、受信機と IF 系、可変減衰器、シンセサイザ、分光計（SAM45）など、装置ごとにある。共通の規格で作られている（observation-flow.md の2）。
-    装置ごとに分けて書くか、どの単位で書くかは、計算機グループへの聞き取りで決める（nro-45m-control の docs/interfaces.md の「聞き取りの候補」6）。
+    装置ごとにあり、装置ごとに担当が変わりうる（聞き取り2026-11-19 問3）。装置ごとの資産に分けるのは、装置ごとの担当と保守の状況が分かったときに行う。
     マネージャーとのあいだの通信は非公開。観測時系列データの置き場所（ネットワークで共有される）は、どの台帳にも id がない
 
 - id: sw-cosmos-merge
@@ -140,8 +144,10 @@
   part_of: sw-cosmos
   depends_on: [sw-cosmos-lc, ctl-computers]
   status: 運用中
-  maintenance: {by: 所内、メーカー, condition: 未記入, effort: 未記入}
-  renewal: 未記入
+  maintenance: {by: メーカー, condition: 未記入, effort: 未記入}
+  renewal: >-
+    解析ソフトが CASA に移るときに、変える必要がある。CASA に移った後の新しいマージは、担当者をつけて内製にする予定（聞き取り2026-11-19 問3）。
+    観測時系列データの仕様が変わらなければ、装置が変わってもそのまま動く（同）
   owner_role: 計算機グループ
   maintainers: 未記入
   repos:
@@ -149,5 +155,5 @@
   sources:
     - 役割（観測の終了時にマネージャーが起動し、各装置の観測時系列データを読んで、観測ごとに1つの観測生データを作る。観測者はスクリプトにアクセスできない）：YATSUGATAKE-NRO45-sam45compat の docs/cosmos/observation-flow.md の6
     - YKSP の観測生データも、このマージで作る：YATSUGATAKE-NRO45-sam45compat の docs/plan.md の5
-    - 保守の担い手の種類：sw-cosmos と同じと仮定（仮説）
-  note: 指示書では装置名 MRG で設定する（nro45-interfaces の observation-script/v1.md）。観測生データの形式の記述は、断片も見つかっていない（nro-45m-control の docs/interfaces.md の④）
+    - 保守の担い手の種類（外部に発注）、更新の見込み：聞き取り2026-11-19 問3
+  note: 観測生データは解析ソフトと整合させている（聞き取り2026-11-19 問3）。指示書では装置名 MRG で設定する（nro45-interfaces の observation-script/v1.md）。観測生データの形式の記述は、断片も見つかっていない（nro-45m-control の docs/interfaces.md の④）
