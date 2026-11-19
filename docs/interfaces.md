@@ -7,7 +7,7 @@
 - 範囲は、典型的なポジションスイッチ（PSW）観測の流れです。OTF などのほかの観測のモードは、後から足します。
 - 制御の手順、装置のあいだの通信の中身、接続先、認証、計算機の上のパスは書きません。
 
-確認日：2026-11-19
+確認日：2026-11-19（台帳の id は同日に足した `sw-cosmos-lc`、`sw-cosmos-merge`、`sw-sam45compat-lc`、`db-yksp-delivery` を含む）
 
 ## 流れの全体
 
@@ -38,10 +38,10 @@ COSMOS のマネージャー ◀──② 命令とエラー（非公開）─�
 | 境界 | 流れるもの | 書く側 → 読む側（台帳の id） | 仕様（nro45-interfaces） | 公開 | 状態 |
 |---|---|---|---|---|---|
 | ① 観測指示書 | 観測指示書のファイル | `tool-obs-script` → `sw-cosmos` | `observation-script/`（準備中） | 公開（仮説） | 断片あり |
-| ② マネージャーと Local Controller | 命令、エラー、装置の状態 | `sw-cosmos` ↔ 各装置の Local Controller（台帳に id がない） | 置かない | 非公開 | 所在が記録にない |
-| ③ 観測時系列データ | 装置ごとの時系列のファイル（いまの呼び名は「ロギング」） | 各装置の Local Controller（`be-sam45`、`sw-sam45compat` など）→ quick look（`sw-obs-ui`）、マージ | `timeseries/`（準備中） | 公開できるかは確認中 | 断片あり（SAM45 だけ） |
-| ④ 観測生データ | 観測ごとに1つのファイル | マージ（台帳に id がない）→ `db-nrodb-nobeyama`、解析ソフト | `raw-data/`（準備中） | 公開（仮説） | 記録がない |
-| ⑤ 保管と配信 | 保管の単位と、観測者が取得するときの形 | `db-nrodb-nobeyama`、`db-nrodb-mitaka`、`db-radio-archive`、`sw-sam45compat`（暫定）→ 観測者 | `delivery/`（準備中）。規則は nro-data の docs/data-path.md（準備中） | 形式と規則は公開。取得の方法は非公開 | 断片あり（暫定の YKSP だけ） |
+| ② マネージャーと Local Controller | 命令、エラー、装置の状態 | `sw-cosmos` ↔ `sw-cosmos-lc` | 置かない | 非公開 | 所在が記録にない |
+| ③ 観測時系列データ | 装置ごとの時系列のファイル（いまの呼び名は「ロギング」） | `sw-cosmos-lc`、`sw-sam45compat-lc`（YKSP）→ quick look（`sw-obs-ui`）、`sw-cosmos-merge` | `timeseries/`（準備中） | 公開できるかは確認中 | 断片あり（SAM45 だけ） |
+| ④ 観測生データ | 観測ごとに1つのファイル | `sw-cosmos-merge` → `db-nrodb-nobeyama`、`db-yksp-delivery`、解析ソフト | `raw-data/`（準備中） | 公開（仮説） | 記録がない |
+| ⑤ 保管と配信 | 保管の単位と、観測者が取得するときの形 | `db-nrodb-nobeyama`、`db-nrodb-mitaka`、`db-radio-archive`、`db-yksp-delivery`（暫定）→ 観測者 | `delivery/`（準備中）。規則は nro-data の [docs/data-path.md](https://github.com/nobeyama-radio-observatory/nro-data/blob/main/docs/data-path.md) | 形式と規則は公開。取得の方法は非公開 | 断片あり（暫定の YKSP だけ） |
 | ⑥ 解析 | 解析ソフトが読む形式 | 観測生データ → `tool-newstar`、`tool-nostar`、`tool-cont`、`tool-casa-export` | ④ と同じ | 公開 | 記録がない |
 
 ## 境界ごとの詳細
@@ -75,7 +75,7 @@ COSMOS のマネージャー ◀──② 命令とエラー（非公開）─�
 - **関係する予定：**
   - YATSUGATAKE の最終版の連携ソフトウェア（YKSP-LC）は、マネージャーにつながる予定である（[聞き取り 2026-11-18](../interviews/2026-11-18.md) 問6）。
   - アンテナ制御ユニット（ACU）のインターフェースが変われば、COSMOS の改修も要る（同 問6）。ACU との境界は nro-45m-antenna の `nro45m-acu` が持つ。
-- **欠けていること：** 各装置の Local Controller は、どの台帳にも id がない。
+- **欠けていること：** 各装置の Local Controller は、まとめて `sw-cosmos-lc` として台帳に置いた。装置ごとに分けるかは聞き取りで決める（下の「聞き取りの候補」6）。
 
 ### ③ 観測時系列データ
 
@@ -103,7 +103,7 @@ COSMOS のマネージャー ◀──② 命令とエラー（非公開）─�
 - **欠けていること：**
   - 観測生データの形式の記述（記録がない。断片も見つかっていない）
   - 形式の版を示す欄があるか（記録がない）
-  - マージは、どの台帳にも id がない
+  - マージの保守の担い手の数（台帳の `sw-cosmos-merge` は未記入）
 
 ### ⑤ 保管と配信
 
@@ -123,7 +123,7 @@ COSMOS のマネージャー ◀──② 命令とエラー（非公開）─�
   - リモートの観測者の取得の方法
   - 1観測あたりと1年あたりのデータ量
   - NRODB を改修するか、新しいシステムを作るか（nro-data の台帳の `renewal`）
-  - 規則は nro-data の docs/data-path.md に書く（準備中）。
+  - 規則と状態は nro-data の [docs/data-path.md](https://github.com/nobeyama-radio-observatory/nro-data/blob/main/docs/data-path.md) にまとめた。
 
 ### ⑥ 解析
 
@@ -154,4 +154,4 @@ COSMOS のマネージャー ◀──② 命令とエラー（非公開）─�
 3. ④ の観測生データの形式の記述があるか。形式の版を示す欄があるか
 4. ① の命令の一覧と、パラメータの型、単位、範囲の記述があるか。nobs のソースの所在と言語
 5. ⑤ の YKSP の保管と配信の方針（アーカイブ、二重化、保管期間、リモートからの取得、データ量）
-6. 各装置の Local Controller とマージを、台帳の資産として分けて書くか
+6. 各装置の Local Controller（いまは `sw-cosmos-lc` にまとめている）を、装置ごとに分けて書くか。マージと Local Controller の保守の担い手の数

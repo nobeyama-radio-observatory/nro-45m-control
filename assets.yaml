@@ -112,3 +112,42 @@
     - 範囲、保守、担い手の数、更新の見込み：聞き取り2026-11-18 問2〜問5
     - 担当：聞き取り2026-11-18 問1
   note: 所内の共通のサービス用の仮想化の基盤は、このまとまりに含めない（聞き取り2026-11-18 問2）。保守の状況と担い手の数は COSMOS についての答えを当てはめたもの
+
+- id: sw-cosmos-lc
+  name: 各装置の Local Controller（COSMOS の一部）
+  kind: ソフトウェア
+  part_of: sw-cosmos
+  depends_on: [ctl-computers]
+  status: 運用中
+  maintenance: {by: 所内、メーカー, condition: 未記入, effort: 未記入}
+  renewal: 未記入。2027〜2028年度の計算機の更新の範囲に含まれるかは未記入。YATSUGATAKE の最終版の連携ソフトウェア（YKSP-LC）が、新しい Local Controller として COSMOS のマネージャーにつながる予定（聞き取り2026-11-18 問6）
+  owner_role: 計算機グループ
+  maintainers: 未記入
+  repos:
+    - {name: nro45-interfaces, url: https://github.com/nobeyama-radio-observatory/nro45-interfaces}
+  sources:
+    - 役割（マネージャーから装置ごとの命令を受けて装置を制御し、エラーを返し、観測時系列データ（ロギング）を書く）：YATSUGATAKE-NRO45-sam45compat の docs/cosmos/observation-flow.md の2、3、4
+    - 指示書に現れる装置名（ANT、RXT、IFATT、SYNTHE、SAM45、MRG、MMC）：nro45-interfaces の observation-script/v1.md
+    - 保守の担い手の種類：sw-cosmos と同じと仮定（仮説）
+  note: >-
+    アンテナ、受信機と IF 系、可変減衰器、シンセサイザ、分光計（SAM45）など、装置ごとにある。共通の規格で作られている（observation-flow.md の2）。
+    装置ごとに分けて書くか、どの単位で書くかは、計算機グループへの聞き取りで決める（nro-45m-control の docs/interfaces.md の「聞き取りの候補」6）。
+    マネージャーとのあいだの通信は非公開。観測時系列データの置き場所（ネットワークで共有される）は、どの台帳にも id がない
+
+- id: sw-cosmos-merge
+  name: マージ（観測時系列データから観測生データを作る。COSMOS の一部）
+  kind: ソフトウェア
+  part_of: sw-cosmos
+  depends_on: [sw-cosmos-lc, ctl-computers]
+  status: 運用中
+  maintenance: {by: 所内、メーカー, condition: 未記入, effort: 未記入}
+  renewal: 未記入
+  owner_role: 計算機グループ
+  maintainers: 未記入
+  repos:
+    - {name: nro45-interfaces, url: https://github.com/nobeyama-radio-observatory/nro45-interfaces}
+  sources:
+    - 役割（観測の終了時にマネージャーが起動し、各装置の観測時系列データを読んで、観測ごとに1つの観測生データを作る。観測者はスクリプトにアクセスできない）：YATSUGATAKE-NRO45-sam45compat の docs/cosmos/observation-flow.md の6
+    - YKSP の観測生データも、このマージで作る：YATSUGATAKE-NRO45-sam45compat の docs/plan.md の5
+    - 保守の担い手の種類：sw-cosmos と同じと仮定（仮説）
+  note: 指示書では装置名 MRG で設定する（nro45-interfaces の observation-script/v1.md）。観測生データの形式の記述は、断片も見つかっていない（nro-45m-control の docs/interfaces.md の④）
