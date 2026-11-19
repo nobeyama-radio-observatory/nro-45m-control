@@ -58,6 +58,9 @@
   renewal: web UI 化を、計算機の更新と合わせて来年度か再来年度（2027〜2028年度）に行う予定
   owner_role: 計算機グループ
   maintainers: 未記入
+  docs:
+    - 観測者向け：遠隔観測のビューア（4つのビューアと画面） https://www.nro.nao.ac.jp/projects/45m/observations/windows/
+    - 利用者が独習できるマニュアルはない（maintenance.condition）（2026-11-19 に確認）
   sources:
     - 構成：40周年記念誌 p.56（マネージャー画面の図の説明）
     - 保守の手間と状況：聞き取り2026-11-18 問7
@@ -78,6 +81,10 @@
   renewal: 画面を転送する方式をやめ、web UI での観測に切り替えたい。アクセスの方式も見直す。計算機の更新と合わせて来年度か再来年度（2027〜2028年度）に行う予定
   owner_role: 計算機グループ
   maintainers: 未記入
+  docs:
+    - 観測者向け：観測準備（観測の場所の選び方、事前の申し込み、接続試験） https://www.nro.nao.ac.jp/projects/45m/observations/
+    - 観測者向け：遠隔観測のビューア https://www.nro.nao.ac.jp/projects/45m/observations/windows/
+    - 非公開（所在のみ）：リモート観測のマニュアル（三鷹から、大学などから）。計算機グループの計算機とネットワークのシステムのページ（ハブの policy/non-public.md）（2026-11-19 に確認）
   sources:
     - 導入：40周年記念誌 p.58
     - 保守の手間と状況：聞き取り2026-11-18 問5、問7、問8
