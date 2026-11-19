@@ -35,6 +35,8 @@
   renewal: 観測システムの web UI 化と、リモート観測のアクセスの方式の見直しを、計算機の更新と合わせて来年度か再来年度（2027〜2028年度）に行う予定
   owner_role: 計算機グループ
   maintainers: 1
+  repos:
+    - {name: nro45-interfaces, url: https://github.com/nobeyama-radio-observatory/nro45-interfaces}
   sources:
     - 名称と役割：障害情報 Trouble ID 2026-2、Trouble ID 2026-5
     - 第3世代の報告：年次報告2002（論文の一覧にある COSMOS-3 の報告）

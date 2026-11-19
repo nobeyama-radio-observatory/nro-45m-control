@@ -13,13 +13,14 @@
 ```
 
 - **このリポジトリが正本のもの：** 台帳（構成、依存関係、提供の状態、保守の状況、更新の見込み、担い手の数）、運用と保守の文書、聞き取りの記録。
-- **製品と開発のリポジトリ：** いまはありません。
+- **製品と開発のリポジトリ：** 観測系のインターフェース仕様の [nro45-interfaces](https://github.com/nobeyama-radio-observatory/nro45-interfaces)（ハブの判断記録 0013）。台帳の `repos` から参照します。
 
 ## 中身
 
 | 場所 | 中身 |
 |---|---|
 | [assets.yaml](assets.yaml) | 台帳。項目の定義はハブの [assets/README.md](https://github.com/nobeyama-radio-observatory/nro-context/blob/main/assets/README.md) |
+| [docs/interfaces.md](docs/interfaces.md) | 観測系の境界の一覧。境界ごとの流れるもの、担う資産、仕様の所在、欠けていること |
 | [interviews/](interviews/README.md) | 聞き取りの記録。公開資料にない値（保守の手間、担い手の数、更新の見込みなど）の出典 |
 
 台帳の id の置き場所は、ハブの[資産の索引](https://github.com/nobeyama-radio-observatory/nro-context/blob/main/assets/README.md)で引けます。`nro45m`（アンテナ）は [nro-45m-antenna](https://github.com/nobeyama-radio-observatory/nro-45m-antenna) にあります。
